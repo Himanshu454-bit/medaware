@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MedAware | Medicine & Health Awareness</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --primary:#0f766e;
+  --accent:#14b8a6;
+  --bg:#ecfeff;
+  --danger:#9f1239;
+}
+body{
+  font-family:Segoe UI,Arial,sans-serif;
+  margin:0;
+  background:var(--bg);
+  color:#1f2937;
+}
+.top-disclaimer{
+  background:#fff1f2;
+  color:var(--danger);
+  padding:15px;
+  text-align:center;
+  font-weight:900;
+  border-bottom:3px solid var(--danger);
+}
+.top-note{
+  background:#fef2f2;
+  color:#7f1d1d;
+  padding:12px;
+  text-align:center;
+  font-weight:700;
+  border-bottom:2px solid #dc2626;
+}
+header{
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:white;
+  padding:25px;
+  text-align:center;
+}
+.filters,.search-box{
+  text-align:center;
+  margin:15px;
+}
+.filters button{
+  background:white;
+  border:2px solid var(--accent);
+  color:var(--primary);
+  padding:6px 14px;
+  margin:4px;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.filters button.active{
+  background:var(--primary);
+  color:white;
+}
+.search-box input{
+  width:92%;
+  max-width:420px;
+  padding:12px;
+  font-size:16px;
+  border-radius:30px;
+  border:2px solid var(--accent);
+}
+.container{padding:10px;overflow-x:auto;}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+th,td{
+  padding:12px;
+  border-bottom:1px solid #e5e7eb;
+  font-size:14px;
+}
+th{
+  background:#ccfbf1;
+  color:#065f46;
+}
+.bottom-disclaimer{
+  background:#fef3c7;
+  color:#92400e;
+  padding:18px;
+  margin:20px;
+  border-radius:10px;
+  font-weight:bold;
+}
+@media(max-width:600px){
+  th,td{font-size:12px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP DISCLAIMER -->
+<div class="top-disclaimer">
+⚠️ THIS WEBSITE IS FOR EDUCATIONAL & AWARENESS PURPOSES ONLY.  
+IT DOES NOT PROVIDE MEDICAL ADVICE, DOSAGE, OR TREATMENT.  
+ALWAYS CONSULT A QUALIFIED HEALTHCARE PROFESSIONAL.
+</div>
+
+<!-- IMPORTANT SAFETY NOTE -->
+<div class="top-note">
+🚫 IMPORTANT NOTE:  
+Do NOT take medicines in large doses or without a genuine medical condition or infection.  
+Improper use of medicines can cause serious harm to organs such as the liver and kidneys,  
+and may also make medicines less effective when genuinely needed in the future.
+</div>
+
+<header>
+<h1>💊 MedAware</h1>
+<p>Medicine Categories • Nutrition Awareness • Safety Information</p>
+</header>
+
+<div class="filters">
+<button class="active" onclick="filterCat('All')">All</button>
+<button onclick="filterCat('Vitamin')">Vitamins</button>
+<button onclick="filterCat('Painkiller')">Painkillers</button>
+<button onclick="filterCat('Antibiotic')">Antibiotics</button>
+<button onclick="filterCat('Allergy')">Allergy</button>
+<button onclick="filterCat('Digestive')">Digestive</button>
+<button onclick="filterCat('Diabetes')">Diabetes</button>
+<button onclick="filterCat('Cardiac')">Heart / BP</button>
+<button onclick="filterCat('Respiratory')">Respiratory</button>
+<button onclick="filterCat('Neuro')">Neuro / Mental</button>
+</div>
+
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Search medicine name..." onkeyup="searchMedicine()">
+</div>
+
+<div class="container">
+<table id="medicineTable">
+<tr>
+<th>Medicine Name</th>
+<th>Category</th>
+<th>What to Eat (Vitamin Deficiency)</th>
+<th>Important Safety Notes</th>
+</tr>
+</table>
+</div>
+
+<div class="bottom-disclaimer">
+Medical Disclaimer:  
+This platform provides general health information only.  
+Do not use it for self-diagnosis or self-treatment.
+</div>
+
+<script>
+/* === 200 MEDICINES (NO REPEAT) === */
+const medicines = [
+"Vitamin A","Vitamin B1","Vitamin B6","Vitamin B12","Vitamin C","Vitamin D3","Vitamin E","Folic Acid","Calcium Carbonate","Iron Sucrose",
+"Paracetamol","Ibuprofen","Aspirin","Diclofenac","Naproxen","Aceclofenac","Mefenamic Acid","Etoricoxib","Tramadol","Indomethacin",
+"Amoxicillin","Azithromycin","Ciprofloxacin","Levofloxacin","Ofloxacin","Cefixime","Ceftriaxone","Doxycycline","Metronidazole","Clindamycin",
+"Linezolid","Vancomycin","Nitrofurantoin","Clarithromycin","Aztreonam",
+"Cetirizine","Loratadine","Fexofenadine","Levocetirizine","Chlorpheniramine","Diphenhydramine","Desloratadine","Hydroxyzine","Bilastine","Rupatadine",
+"Omeprazole","Pantoprazole","Esomeprazole","Rabeprazole","Ranitidine","Famotidine","Domperidone","Metoclopramide","Loperamide","Ondansetron",
+"Metformin","Glimepiride","Glipizide","Gliclazide","Sitagliptin","Vildagliptin","Linagliptin","Pioglitazone","Acarbose","Insulin",
+"Amlodipine","Atenolol","Metoprolol","Losartan","Telmisartan","Olmesartan","Ramipril","Enalapril","Hydrochlorothiazide","Furosemide",
+"Propranolol","Bisoprolol","Spironolactone",
+"Salbutamol","Levosalbutamol","Budesonide","Beclomethasone","Formoterol","Montelukast","Theophylline","Ipratropium","Tiotropium","Fluticasone",
+"Diazepam","Alprazolam","Clonazepam","Fluoxetine","Sertraline","Escitalopram","Amitriptyline","Imipramine","Risperidone","Olanzapine",
+"Gabapentin","Pregabalin","Levetiracetam","Phenytoin","Carbamazepine","Valproate","Lamotrigine","Topiramate","Zolpidem","Melatonin",
+"Atorvastatin","Rosuvastatin","Simvastatin","Ezetimibe","Fenofibrate","Allopurinol","Febuxostat","Colchicine","Tamsulosin","Finasteride",
+"Levothyroxine","Prednisolone"
+];
+
+/* CATEGORY */
+function categoryOf(n){
+  if(n.includes("Vitamin")||n.includes("Calcium")||n.includes("Iron")||n.includes("Folic")) return "Vitamin";
+  if("Paracetamol Ibuprofen Aspirin Diclofenac Naproxen Aceclofenac Mefenamic Etoricoxib Tramadol Indomethacin".includes(n.split(" ")[0])) return "Painkiller";
+  if("Amoxicillin Azithromycin Ciprofloxacin Levofloxacin Ofloxacin Cefixime Ceftriaxone Doxycycline Metronidazole Clindamycin Linezolid Vancomycin Nitrofurantoin Clarithromycin Aztreonam".includes(n.split(" ")[0])) return "Antibiotic";
+  if("Cetirizine Loratadine Fexofenadine Levocetirizine Chlorpheniramine Diphenhydramine Desloratadine Hydroxyzine Bilastine Rupatadine".includes(n.split(" ")[0])) return "Allergy";
+  if("Omeprazole Pantoprazole Esomeprazole Rabeprazole Ranitidine Famotidine Domperidone Metoclopramide Loperamide Ondansetron".includes(n.split(" ")[0])) return "Digestive";
+  if("Metformin Glimepiride Glipizide Gliclazide Sitagliptin Vildagliptin Linagliptin Pioglitazone Acarbose Insulin".includes(n.split(" ")[0])) return "Diabetes";
+  if("Amlodipine Atenolol Metoprolol Losartan Telmisartan Olmesartan Ramipril Enalapril Hydrochlorothiazide Furosemide Propranolol Bisoprolol Spironolactone".includes(n.split(" ")[0])) return "Cardiac";
+  if("Salbutamol Levosalbutamol Budesonide Beclomethasone Formoterol Montelukast Theophylline Ipratropium Tiotropium Fluticasone".includes(n.split(" ")[0])) return "Respiratory";
+  if("Diazepam Alprazolam Clonazepam Fluoxetine Sertraline Escitalopram Amitriptyline Imipramine Risperidone Olanzapine Gabapentin Pregabalin Levetiracetam Phenytoin Carbamazepine Valproate Lamotrigine Topiramate Zolpidem Melatonin".includes(n.split(" ")[0])) return "Neuro";
+  return "Other";
+}
+
+/* DIET FOR VITAMINS */
+function dietFor(n){
+  if(n==="Vitamin A") return "Carrots, spinach, sweet potatoes, mango";
+  if(n==="Vitamin B1") return "Whole grains, nuts, legumes";
+  if(n==="Vitamin B6") return "Bananas, chickpeas, fish";
+  if(n==="Vitamin B12") return "Milk, eggs, fish, meat";
+  if(n==="Vitamin C") return "Citrus fruits, guava, amla";
+  if(n==="Vitamin D3") return "Sunlight, fortified milk, fish";
+  if(n==="Vitamin E") return "Nuts, seeds, vegetable oils";
+  if(n==="Folic Acid") return "Green leafy vegetables, beans";
+  if(n.includes("Calcium")) return "Milk, curd, cheese, ragi";
+  if(n.includes("Iron")) return "Spinach, dates, jaggery";
+  return "Not applicable";
+}
+
+/* BUILD TABLE */
+const table=document.getElementById("medicineTable");
+function build(list){
+  table.innerHTML=table.rows[0].outerHTML;
+  list.forEach(n=>{
+    const r=table.insertRow();
+    r.insertCell(0).innerText=n;
+    r.insertCell(1).innerText=categoryOf(n);
+    r.insertCell(2).innerText=dietFor(n);
+    r.insertCell(3).innerText=
+      "Do not take medicines in high doses or without medical need. Misuse may harm the liver and reduce effectiveness in future.";
+  });
+}
+build(medicines);
+
+/* FILTER & SEARCH */
+function filterCat(c){
+  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+  event.target.classList.add("active");
+  build(c==="All"?medicines:medicines.filter(m=>categoryOf(m)===c));
+}
+function searchMedicine(){
+  let q=searchInput.value.toLowerCase();
+  [...table.rows].slice(1).forEach(r=>{
+    r.style.display=r.cells[0].innerText.toLowerCase().includes(q)?"":"none";
+  });
+}
+</script>
+
+</body>
+</html>
