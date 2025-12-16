@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MedAware | Medicine & Health Awareness</title>
+<title>BioFusion | Medical Awareness & Safety Platform</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -99,23 +99,20 @@ th{
 
 <body>
 
-<!-- TOP DISCLAIMER -->
 <div class="top-disclaimer">
 ⚠️ THIS WEBSITE IS FOR EDUCATIONAL & AWARENESS PURPOSES ONLY.  
 IT DOES NOT PROVIDE MEDICAL ADVICE, DOSAGE, OR TREATMENT.  
 ALWAYS CONSULT A QUALIFIED HEALTHCARE PROFESSIONAL.
 </div>
 
-<!-- IMPORTANT SAFETY NOTE -->
 <div class="top-note">
 🚫 IMPORTANT NOTE:  
 Do NOT take medicines in large doses or without a genuine medical condition or infection.  
-Improper use of medicines can cause serious harm to organs such as the liver and kidneys,  
-and may also make medicines less effective when genuinely needed in the future.
+Improper use may cause liver damage and reduce medicine effectiveness in the future.
 </div>
 
 <header>
-<h1>💊 MedAware</h1>
+<h1>🧬 BioFusion</h1>
 <p>Medicine Categories • Nutrition Awareness • Safety Information</p>
 </header>
 
@@ -149,12 +146,11 @@ and may also make medicines less effective when genuinely needed in the future.
 
 <div class="bottom-disclaimer">
 Medical Disclaimer:  
-This platform provides general health information only.  
-Do not use it for self-diagnosis or self-treatment.
+BioFusion provides general health awareness only.  
+Do not use this information for self-diagnosis or self-treatment.
 </div>
 
 <script>
-/* === 200 MEDICINES (NO REPEAT) === */
 const medicines = [
 "Vitamin A","Vitamin B1","Vitamin B6","Vitamin B12","Vitamin C","Vitamin D3","Vitamin E","Folic Acid","Calcium Carbonate","Iron Sucrose",
 "Paracetamol","Ibuprofen","Aspirin","Diclofenac","Naproxen","Aceclofenac","Mefenamic Acid","Etoricoxib","Tramadol","Indomethacin",
@@ -172,7 +168,6 @@ const medicines = [
 "Levothyroxine","Prednisolone"
 ];
 
-/* CATEGORY */
 function categoryOf(n){
   if(n.includes("Vitamin")||n.includes("Calcium")||n.includes("Iron")||n.includes("Folic")) return "Vitamin";
   if("Paracetamol Ibuprofen Aspirin Diclofenac Naproxen Aceclofenac Mefenamic Etoricoxib Tramadol Indomethacin".includes(n.split(" ")[0])) return "Painkiller";
@@ -186,7 +181,6 @@ function categoryOf(n){
   return "Other";
 }
 
-/* DIET FOR VITAMINS */
 function dietFor(n){
   if(n==="Vitamin A") return "Carrots, spinach, sweet potatoes, mango";
   if(n==="Vitamin B1") return "Whole grains, nuts, legumes";
@@ -201,7 +195,6 @@ function dietFor(n){
   return "Not applicable";
 }
 
-/* BUILD TABLE */
 const table=document.getElementById("medicineTable");
 function build(list){
   table.innerHTML=table.rows[0].outerHTML;
@@ -210,13 +203,11 @@ function build(list){
     r.insertCell(0).innerText=n;
     r.insertCell(1).innerText=categoryOf(n);
     r.insertCell(2).innerText=dietFor(n);
-    r.insertCell(3).innerText=
-      "Do not take medicines in high doses or without medical need. Misuse may harm the liver and reduce effectiveness in future.";
+    r.insertCell(3).innerText="Avoid misuse or unnecessary consumption. Always consult a healthcare professional.";
   });
 }
 build(medicines);
 
-/* FILTER & SEARCH */
 function filterCat(c){
   document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
   event.target.classList.add("active");
